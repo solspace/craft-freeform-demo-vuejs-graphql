@@ -201,7 +201,7 @@ export default {
 </script>
 
 <template>
-    <form class="text-center flex flex-col items-center justify-center" @submit.prevent="handleSubmit">
+    <form class="text-center flex flex-col items-left justify-left" @submit.prevent="handleSubmit">
         <h3 class="mb-4 text-xl font-normal text-left">Contact Form</h3>
         <div class="flex flex-col w-full space-y-6">
             <div class="flex flex-row space-x-4 w-full">
@@ -319,7 +319,7 @@ export default {
                 </div>
             </div>
             <div class="flex flex-row w-full">
-                <div class="flex flex-row items-center justify-center space-y-2 w-full">
+                <div class="flex flex-row items-left justify-left space-y-2 w-full">
                     <button class="btn-primary" type="submit">Submit</button>
                 </div>
             </div>
