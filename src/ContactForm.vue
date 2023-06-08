@@ -252,8 +252,8 @@ export default {
                     </select>
                 </div>
                 <div class="flex flex-col items-start justify-center space-y-2 w-full">
-                    <label for="appointmentDateTime">Appointment Date &amp; Time <span class="ml-1 text-[red]">*</span></label>
-                    <input class="form-input w-full text-gray-900 bg-slate-300 rounded-md" name="appointmentDateTime" type="text" id="appointmentDateTime" placeholder="YYYY/MM/DD H:MM TT" autoComplete="off" v-model="formData.appointmentDateTime" v-on:change="event => (formData = { ...formData, appointmentDateTime: event.target.value })" required />
+                    <label for="appointmentDateTime">Appointment Date <span class="ml-1 text-[red]">*</span></label>
+                    <input class="form-input w-full text-gray-900 bg-slate-300 rounded-md" name="appointmentDateTime" type="text" id="appointmentDateTime" placeholder="YYYY/MM/DD" autoComplete="off" v-model="formData.appointmentDateTime" v-on:change="event => (formData = { ...formData, appointmentDateTime: event.target.value })" required />
                 </div>
                 <div class="flex flex-col items-start justify-center space-y-2 w-full">
                     <label for="department">Department <span class="ml-1 text-[red]">*</span></label>
