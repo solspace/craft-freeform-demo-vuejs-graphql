@@ -226,44 +226,44 @@ export default {
             <div class="flex flex-row space-x-4 w-full">
                 <div class="flex flex-col items-start justify-center space-y-2 w-full">
                     <label for="firstName">First Name <span class="ml-1 text-[red]">*</span></label>
-                    <input class="form-input w-full text-gray-900 bg-slate-200 rounded" name="firstName" type="text" id="firstName" v-model="formData.firstName" v-on:change="event => (formData = { ...formData, firstName: event.target.value })" required />
+                    <input class="form-input w-full text-gray-900 bg-slate-200 rounded-md" name="firstName" type="text" id="firstName" v-model="formData.firstName" v-on:change="event => (formData = { ...formData, firstName: event.target.value })" required />
                 </div>
                 <div class="flex flex-col items-start justify-center space-y-2 w-full">
                     <label for="lastName">Last Name <span class="ml-1 text-[red]">*</span></label>
-                    <input class="form-input w-full text-gray-900 bg-slate-200 rounded" name="lastName" type="text" id="lastName" v-model="formData.lastName" v-on:change="event => (formData = { ...formData, lastName: event.target.value })" required />
+                    <input class="form-input w-full text-gray-900 bg-slate-200 rounded-md" name="lastName" type="text" id="lastName" v-model="formData.lastName" v-on:change="event => (formData = { ...formData, lastName: event.target.value })" required />
                 </div>
             </div>
             <div class="flex flex-row w-full">
                 <div class="flex flex-col items-start justify-center space-y-2 w-full">
                     <label for="companyName">Organization Name</label>
-                    <input class="form-input w-full text-gray-900 bg-slate-200 rounded" name="companyName" type="text" id="companyName" v-model="formData.companyName" v-on:change="event => (formData = { ...formData, companyName: event.target.value })" />
+                    <input class="form-input w-full text-gray-900 bg-slate-200 rounded-md" name="companyName" type="text" id="companyName" v-model="formData.companyName" v-on:change="event => (formData = { ...formData, companyName: event.target.value })" />
                 </div>
             </div>
             <div class="flex flex-row w-full">
                 <div class="flex flex-col items-start justify-center space-y-2 w-full">
                     <label for="email">Email <span class="ml-1 text-[red]">*</span></label>
                     <div class="text-sm">We&apos;ll never share your email with anyone else.</div>
-                    <input class="form-input w-full text-gray-900 bg-slate-200 rounded" name="email" type="email" id="email" v-model="formData.email" v-on:change="event => (formData = { ...formData, email: event.target.value })" required />
+                    <input class="form-input w-full text-gray-900 bg-slate-200 rounded-md" name="email" type="email" id="email" v-model="formData.email" v-on:change="event => (formData = { ...formData, email: event.target.value })" required />
                 </div>
             </div>
             <div class="flex flex-row space-x-4 w-full">
                 <div class="flex flex-col items-start justify-center space-y-2 w-full">
                     <label for="cellPhone">Cell Phone</label>
-                    <input class="form-input w-full text-gray-900 bg-slate-200 rounded" name="cellPhone" type="tel" id="cellPhone" v-model="formData.cellPhone" v-on:change="event => (formData = { ...formData, cellPhone: event.target.value })" />
+                    <input class="form-input w-full text-gray-900 bg-slate-200 rounded-md" name="cellPhone" type="tel" id="cellPhone" v-model="formData.cellPhone" v-on:change="event => (formData = { ...formData, cellPhone: event.target.value })" />
                 </div>
                 <div class="flex flex-col items-start justify-center space-y-2 w-full">
                     <label for="homePhone">Home Phone</label>
-                    <input class="form-input w-full text-gray-900 bg-slate-200 rounded" name="homePhone" type="tel" id="homePhone" v-model="formData.homePhone" v-on:change="event => (formData = { ...formData, homePhone: event.target.value })" />
+                    <input class="form-input w-full text-gray-900 bg-slate-200 rounded-md" name="homePhone" type="tel" id="homePhone" v-model="formData.homePhone" v-on:change="event => (formData = { ...formData, homePhone: event.target.value })" />
                 </div>
                 <div class="flex flex-col items-start justify-center space-y-2 w-full">
                     <label for="workPhone">Work Phone</label>
-                    <input class="form-input w-full text-gray-900 bg-slate-200 rounded" name="workPhone" type="tel" id="workPhone" v-model="formData.workPhone" v-on:change="event => (formData = { ...formData, workPhone: event.target.value })" />
+                    <input class="form-input w-full text-gray-900 bg-slate-200 rounded-md" name="workPhone" type="tel" id="workPhone" v-model="formData.workPhone" v-on:change="event => (formData = { ...formData, workPhone: event.target.value })" />
                 </div>
             </div>
             <div class="flex flex-row space-x-4 w-full">
                 <div class="flex flex-col items-start justify-center space-y-2 w-full">
                     <label for="subject">Subject <span class="ml-1 text-[red]">*</span></label>
-                    <select class="form-select w-full text-gray-900 bg-slate-200 rounded" name="subject" id="subject" v-model="formData.subject" v-on:change="event => (formData = { ...formData, subject: event.target.value })" required>
+                    <select class="form-select w-full text-gray-900 bg-slate-200 rounded-md" name="subject" id="subject" v-model="formData.subject" v-on:change="event => (formData = { ...formData, subject: event.target.value })" required>
                         <option value="">I need some help with...</option>
                         <option value="myHomework">My homework</option>
                         <option value="practicingMyHammerDance">Practicing my hammer dance</option>
@@ -272,11 +272,11 @@ export default {
                 </div>
                 <div class="flex flex-col items-start justify-center space-y-2 w-full">
                     <label for="appointmentDateTime">Appointment Date &amp; Time <span class="ml-1 text-[red]">*</span></label>
-                    <input class="form-input w-full text-gray-900 bg-slate-200 rounded" name="appointmentDateTime" type="text" id="appointmentDateTime" placeholder="YYYY/MM/DD H:MM TT" autoComplete="off" v-model="formData.appointmentDateTime" v-on:change="event => (formData = { ...formData, appointmentDateTime: event.target.value })" required />
+                    <input class="form-input w-full text-gray-900 bg-slate-200 rounded-md" name="appointmentDateTime" type="text" id="appointmentDateTime" placeholder="YYYY/MM/DD H:MM TT" autoComplete="off" v-model="formData.appointmentDateTime" v-on:change="event => (formData = { ...formData, appointmentDateTime: event.target.value })" required />
                 </div>
                 <div class="flex flex-col items-start justify-center space-y-2 w-full">
                     <label for="department">Department <span class="ml-1 text-[red]">*</span></label>
-                    <select class="form-select w-full text-gray-900 bg-slate-200 rounded" name="department" id="department" v-model="formData.department" v-on:change="event => (formData = { ...formData, department: event.target.value })" required>
+                    <select class="form-select w-full text-gray-900 bg-slate-200 rounded-md" name="department" id="department" v-model="formData.department" v-on:change="event => (formData = { ...formData, department: event.target.value })" required>
                         <option value="">Please choose...</option>
                         <option value="sales@example.com">Sales</option>
                         <option value="service@example.com">Service</option>
@@ -309,7 +309,7 @@ export default {
             <div class="flex flex-row space-x-4 w-full">
                 <div class="flex flex-col items-start justify-center space-y-2 w-full">
                     <label for="message">Message <span class="ml-1 text-[red]">*</span></label>
-                    <textarea class="form-textarea w-full text-gray-900 bg-slate-200 rounded" name="message" id="message" rows={5} v-model="formData.message" v-on:change="event => (formData = { ...formData, message: event.target.value })" required></textarea>
+                    <textarea class="form-textarea w-full text-gray-900 bg-slate-200 rounded-md" name="message" id="message" rows={5} v-model="formData.message" v-on:change="event => (formData = { ...formData, message: event.target.value })" required></textarea>
                 </div>
             </div>
             <div class="flex flex-row space-x-4 w-full">
@@ -331,7 +331,7 @@ export default {
                 <div class="flex flex-col items-start justify-start space-y-2 w-full">
                     <label for="howHeardOther">Other</label>
                     <div class="text-sm">Please describe how you heard about us.</div>
-                    <input class="form-input w-full text-gray-900 bg-slate-200 rounded" name="howHeardOther" type="text" id="howHeardOther" v-model="formData.howHeardOther" v-on:change="event => (formData = { ...formData, howHeardOther: event.target.value })" />
+                    <input class="form-input w-full text-gray-900 bg-slate-200 rounded-md" name="howHeardOther" type="text" id="howHeardOther" v-model="formData.howHeardOther" v-on:change="event => (formData = { ...formData, howHeardOther: event.target.value })" />
                 </div>
             </div>
             <div class="flex flex-row space-x-4 w-full">
