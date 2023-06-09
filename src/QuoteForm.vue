@@ -17,7 +17,7 @@ const defaultFormData = {
     department: '',
     companyName: '',
     cellPhone: '',
-    appointmentDateTime: '',
+    appointmentDate: '',
     acceptTerms: '',
 };
 
@@ -35,6 +35,9 @@ const defaultFormProperties = {
         handle: '',
         name: '',
     },
+    loadingText: '',
+    successMessage: '',
+    errorMessage: '',
 };
 
 const client = new ApolloClient({
@@ -62,13 +65,13 @@ async function getFormProperties(formId) {
     return response.json();
 }
 
-async function saveContactSubmission(params) {
+async function saveQuoteSubmission(params) {
     const { reCaptchaValue, formData, formProperties } = params;
     const { csrf, honeypot, reCaptcha } = formProperties;
 
     return await client.mutate({
         mutation: gql`
-            mutation SaveContactSubmission(
+            mutation SaveQuoteSubmission(
                 $honeypot: FreeformHoneypotInputType,
                 $reCaptcha: FreeformReCaptchaInputType,
                 $csrfToken: FreeformCsrfTokenInputType,
@@ -84,10 +87,10 @@ async function saveContactSubmission(params) {
                 $department: String,
                 $companyName: String,
                 $cellPhone: String,
-                $appointmentDateTime: DateTime,
+                $appointmentDate: DateTime,
                 $acceptTerms: String
             ) {
-                save_contact_Submission(
+                save_quote_Submission(
                     honeypot: $honeypot
                     reCaptcha: $reCaptcha
                     csrfToken: $csrfToken
@@ -103,7 +106,7 @@ async function saveContactSubmission(params) {
                     department: $department
                     companyName: $companyName
                     cellPhone: $cellPhone
-                    appointmentDateTime: $appointmentDateTime
+                    appointmentDate: $appointmentDate
                     acceptTerms: $acceptTerms
                 ) {
                     submissionId
@@ -132,7 +135,7 @@ async function saveContactSubmission(params) {
             homePhone: formData.homePhone,
             workPhone: formData.workPhone,
             subject: formData.subject,
-            appointmentDateTime: formData.appointmentDateTime,
+            appointmentDate: formData.appointmentDate,
             department: formData.department,
             howMuchDoYouEnjoyEatingPie: formData.howMuchDoYouEnjoyEatingPie,
             message: formData.message,
@@ -143,8 +146,11 @@ async function saveContactSubmission(params) {
 }
 
 export default {
-    name: 'ContactForm',
+    name: 'QuoteForm',
     data: () => ({
+        submitButton: null,
+        errorMessage: null,
+        successMessage: null,
         reCaptchaValue: null,
         formData: defaultFormData,
         formProperties: defaultFormProperties,
@@ -173,6 +179,14 @@ export default {
             this.reCaptchaValue = reCaptchaValue;
         });
     },
+    mounted() {
+        this.errorMessage = document.querySelector('#errorMessage');
+        this.successMessage = document.querySelector('#successMessage');
+        this.submitButton = document.querySelector('button[type="submit"]');
+
+        this.hideError();
+        this.hideSuccess();
+    },
     methods: {
         handleHowDidYouHearAboutThisJobPosting(event) {
             let howDidYouHearAboutThisJobPosting = [...this.formData.howDidYouHearAboutThisJobPosting];
@@ -188,21 +202,70 @@ export default {
                 howDidYouHearAboutThisJobPosting,
             };
         },
-        async handleSubmit() {
+        startProcessing() {
+            this.submitButton.style.cursor = 'not-allowed';
+            this.submitButton.innerText = this.formProperties.loadingText;
+        },
+        stopProcessing() {
+            this.submitButton.innerText = 'Submit';
+            this.submitButton.style.cursor = 'pointer';
+        },
+        showSuccess() {
+            this.successMessage.style.display = 'block';
+            this.scrollToTop();
+        },
+        hideSuccess() {
+            this.successMessage.style.display = 'none';
+        },
+        showError(error) {
+            console.error(error);
+
+            this.errorMessage.style.display = 'block';
+            this.scrollToTop();
+        },
+        hideError() {
+            this.errorMessage.style.display = 'none';
+        },
+        scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        },
+        async handleSubmit(event) {
+            this.hideError();
+            this.hideSuccess();
+            this.startProcessing();
+
             const formData = this.formData;
             const formProperties = this.formProperties;
             const reCaptchaValue = this.reCaptchaValue;
 
-            const response = await saveContactSubmission({ reCaptchaValue, formData, formProperties });
-            console.log(response);
+            try {
+                const response = await saveQuoteSubmission({ reCaptchaValue, formData, formProperties });
+
+                if (response && response.data && response.data['save_quote_Submission'] && response.data['save_quote_Submission'].success) {
+                    this.showSuccess();
+                } else if (response && response.errors) {
+                    this.showError(response.errors);
+                }
+            } catch (error) {
+                this.showError(error);
+            }
+
+            this.stopProcessing();
+            event.target.reset();
         },
     },
 };
 </script>
 
 <template>
+    <div id="successMessage" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" style="display: none;">
+        <p>{{ this.formProperties.successMessage }}</p>
+    </div>
+    <div id="errorMessage" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" style="display: none;">
+        <p>{{ this.formProperties.errorMessage }}</p>
+    </div>
     <form class="text-center flex flex-col items-left justify-left" @submit.prevent="handleSubmit">
-        <h3 class="mb-4 text-xl font-normal text-left">Contact Form</h3>
+        <h3 class="mb-4 text-xl font-normal text-left">Quote Form</h3>
         <div class="flex flex-col w-full space-y-6">
             <div class="flex flex-row space-x-4 w-full">
                 <div class="flex flex-col items-start justify-center space-y-2 w-full">
@@ -229,8 +292,8 @@ export default {
             </div>
             <div class="flex flex-row space-x-4 w-full">
                 <div class="flex flex-col items-start justify-center space-y-2 w-full">
-                    <label for="cellPhone">Cell Phone</label>
-                    <input class="form-input w-full text-gray-900 bg-slate-300 rounded-md" name="cellPhone" type="tel" id="cellPhone" v-model="formData.cellPhone" v-on:change="event => (formData = { ...formData, cellPhone: event.target.value })" />
+                    <label for="cellPhone">Cell Phone <span class="ml-1 text-[red]">*</span></label>
+                    <input class="form-input w-full text-gray-900 bg-slate-300 rounded-md" name="cellPhone" type="tel" id="cellPhone" v-model="formData.cellPhone" v-on:change="event => (formData = { ...formData, cellPhone: event.target.value })" required />
                 </div>
                 <div class="flex flex-col items-start justify-center space-y-2 w-full">
                     <label for="homePhone">Home Phone</label>
@@ -252,8 +315,8 @@ export default {
                     </select>
                 </div>
                 <div class="flex flex-col items-start justify-center space-y-2 w-full">
-                    <label for="appointmentDateTime">Appointment Date <span class="ml-1 text-[red]">*</span></label>
-                    <input class="form-input w-full text-gray-900 bg-slate-300 rounded-md" name="appointmentDateTime" type="text" id="appointmentDateTime" placeholder="YYYY/MM/DD" autoComplete="off" v-model="formData.appointmentDateTime" v-on:change="event => (formData = { ...formData, appointmentDateTime: event.target.value })" required />
+                    <label for="appointmentDate">Appointment Date</label>
+                    <input class="form-input w-full text-gray-900 bg-slate-300 rounded-md" name="appointmentDate" type="text" id="appointmentDate" placeholder="YYYY/MM/DD" autoComplete="off" v-model="formData.appointmentDate" v-on:change="event => (formData = { ...formData, appointmentDate: event.target.value })"  />
                 </div>
                 <div class="flex flex-col items-start justify-center space-y-2 w-full">
                     <label for="department">Department <span class="ml-1 text-[red]">*</span></label>
