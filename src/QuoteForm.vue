@@ -266,7 +266,7 @@ export default {
     </div>
     <form class="text-center flex flex-col items-left justify-left" @submit.prevent="handleSubmit">
         <h3 class="mb-4 text-xl font-normal text-left">Quote Form</h3>
-        <div class="flex flex-col w-full space-y-6">
+        <div class="flex flex-col w-full space-y-3">
             <div class="form-row">
                 <div class="field-wrapper">
                     <label for="firstName">First Name <span class="ml-1 text-[red]">*</span></label>
