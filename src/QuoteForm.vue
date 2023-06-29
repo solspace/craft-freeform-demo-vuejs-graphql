@@ -192,9 +192,6 @@ export default {
             this.scrollToTop();
         },
         showFieldError(message) {
-            message = JSON.parse(message);
-            message = message[0];
-
             for (const [key, value] of Object.entries(message)) {
                 const element = document.querySelector(`.${key}-field .error-message`);
                 if (element) {
@@ -271,7 +268,11 @@ export default {
             this.onError(({ graphQLErrors }) => {
                 this.showSubmissionError();
 
-                graphQLErrors.forEach(({ message }) => this.showFieldError(message));
+                graphQLErrors.forEach(({ message }) => {
+                    const messages = JSON.parse(message);
+
+                    messages.forEach(message => this.showFieldError(message));
+                });
 
                 this.stopProcessing();
             });
