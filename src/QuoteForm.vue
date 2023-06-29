@@ -41,7 +41,7 @@ const defaultFormProperties = {
 };
 
 const client = new ApolloClient({
-    uri: 'https://demo.solspace.net/craft/graphql/api',
+    uri: '/craft/graphql/api',
     headers: {
         'Cache-Control': 'no-cache',
         'Accept': 'application/json',
@@ -101,7 +101,7 @@ provideApolloClient(client);
 
 async function getFormProperties(formId) {
     // See https://docs.solspace.com/craft/freeform/v4/developer/graphql/#how-to-render-a-form
-    const response = await fetch(`https://demo.solspace.net/craft/freeform/form/properties/${formId}`, { headers: { 'Accept': 'application/json' }});
+    const response = await fetch(`/craft/freeform/form/properties/${formId}`, { headers: { 'Accept': 'application/json' }});
 
     if (!response.ok) {
         throw new Error('Failed to fetch Craft Freeform Form properties');
