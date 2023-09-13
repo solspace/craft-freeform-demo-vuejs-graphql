@@ -30,7 +30,7 @@ const defaultFormProperties = {
         name: '',
         value: '',
     },
-    reCaptcha: {
+    captcha: {
         enabled: false,
         handle: '',
         name: '',
@@ -55,7 +55,7 @@ const client = new ApolloClient({
 const SAVE_QUOTE_SUBMISSION = gql`
   mutation SaveQuoteSubmission(
     $honeypot: FreeformHoneypotInputType,
-    $reCaptcha: FreeformReCaptchaInputType,
+    $captcha: FreeformCaptchaInputType,
     $csrfToken: FreeformCsrfTokenInputType,
     $workPhone: String,
     $subject: String,
@@ -74,7 +74,7 @@ const SAVE_QUOTE_SUBMISSION = gql`
   ) {
     save_quote_Submission(
       honeypot: $honeypot
-      reCaptcha: $reCaptcha
+      captcha: $captcha
       csrfToken: $csrfToken
       workPhone: $workPhone
       subject: $subject
@@ -100,7 +100,7 @@ const SAVE_QUOTE_SUBMISSION = gql`
 provideApolloClient(client);
 
 async function getFormProperties(formId) {
-    // See https://docs.solspace.com/craft/freeform/v4/developer/graphql/#how-to-render-a-form
+    // See https://docs.solspace.com/craft/freeform/v5/developer/graphql/#how-to-render-a-form
     const response = await fetch(`/craft/freeform/form/properties/${formId}`, { headers: { 'Accept': 'application/json' }});
 
     if (!response.ok) {
@@ -116,7 +116,7 @@ export default {
         submitButton: null,
         errorMessage: null,
         successMessage: null,
-        reCaptchaValue: null,
+        captchaValue: null,
         formData: defaultFormData,
         formProperties: defaultFormProperties,
     }),
@@ -145,8 +145,8 @@ export default {
             this.formProperties = formProperties;
         });
 
-        this.getReCaptcha().then(reCaptchaValue => {
-            this.reCaptchaValue = reCaptchaValue;
+        this.getReCaptcha().then(captchaValue => {
+            this.captchaValue = captchaValue;
         });
     },
     mounted() {
@@ -223,8 +223,8 @@ export default {
             this.startProcessing();
 
             const formData = this.formData;
-            const reCaptchaValue = this.reCaptchaValue;
-            const { csrf, honeypot, reCaptcha } = this.formProperties;
+            const captchaValue = this.captchaValue;
+            const { csrf, honeypot, captcha } = this.formProperties;
 
             this.saveQuoteSubmission({
                 honeypot: {
@@ -235,9 +235,9 @@ export default {
                     name: csrf.name,
                     value: csrf.token,
                 },
-                reCaptcha: {
-                    name: reCaptcha.name,
-                    value: reCaptchaValue,
+                captcha: {
+                    name: captcha.name,
+                    value: captchaValue,
                 },
                 firstName: formData.firstName,
                 lastName: formData.lastName,
