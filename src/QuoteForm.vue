@@ -256,16 +256,17 @@ export default {
             });
 
             this.onDone((result) => {
+                this.stopProcessing();
+
                 if (result && Object.hasOwn(result, 'data') && Object.hasOwn(result.data, 'save_quote_Submission') && result.data['save_quote_Submission'] !== null) {
                     this.showSubmissionSuccess();
                 } else {
                     this.showSubmissionError();
                 }
-
-                this.stopProcessing();
             });
 
             this.onError(({ graphQLErrors }) => {
+                this.stopProcessing();
                 this.showSubmissionError();
 
                 graphQLErrors.forEach(({ message }) => {
@@ -273,8 +274,6 @@ export default {
 
                     messages.forEach(message => this.showFieldError(message));
                 });
-
-                this.stopProcessing();
             });
         },
     },
