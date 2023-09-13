@@ -154,10 +154,12 @@ export default {
         });
     },
     mounted() {
+        this.spamMessage = document.querySelector('#spamMessage');
         this.errorMessage = document.querySelector('#errorMessage');
         this.successMessage = document.querySelector('#successMessage');
         this.submitButton = document.querySelector('button[type="submit"]');
 
+        this.hideSpamError();
         this.hideSubmissionError();
         this.hideSubmissionSuccess();
     },
@@ -195,6 +197,10 @@ export default {
             this.errorMessage.style.display = 'block';
             this.scrollToTop();
         },
+        showSpamError() {
+            this.spamMessage.style.display = 'block';
+            this.scrollToTop();
+        },
         showFieldError(message) {
             for (const [key, value] of Object.entries(message)) {
                 if (!/^-?\d+$/.test(key)) {
@@ -218,12 +224,16 @@ export default {
                 });
             }
         },
+        hideSpamError() {
+            this.spamMessage.style.display = 'none';
+        },
         scrollToTop() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         },
         handleSubmit(event) {
             event.preventDefault();
 
+            this.hideSpamError();
             this.hideSubmissionError();
             this.hideSubmissionSuccess();
             this.startProcessing();
@@ -276,12 +286,14 @@ export default {
                 this.showSubmissionError();
 
                 graphQLErrors.forEach(({ message }) => {
-                  if (message.includes('Unknown argument')) {
-                    console.error(message);
+                  if (message.includes('Please verify that you are not a robot.')) {
+                      this.showSpamError();
+                  } else if (message.includes('Unknown argument')) {
+                      console.error(message);
                   } else {
-                    const messages = JSON.parse(message);
+                      const messages = JSON.parse(message);
 
-                    messages.forEach(message => this.showFieldError(message));
+                      messages.forEach(message => this.showFieldError(message));
                   }
                 });
             });
@@ -298,6 +310,9 @@ export default {
         </div>
         <div id="errorMessage" class="w-full bg-red-100 border border-red-400 text-sm text-left text-red-700 px-4 py-2 rounded-md mb-8" style="display: none;">
             <p>{{ this.formProperties.settings.behavior.errorMessage }}</p>
+        </div>
+        <div id="spamMessage" class="w-full bg-red-100 border border-red-400 text-sm text-left text-red-700 px-4 py-2 rounded-md mb-8" style="display: none;">
+            <p>Please verify that you are not a robot.</p>
         </div>
         <div class="flex flex-col w-full space-y-3">
             <div class="form-row">
