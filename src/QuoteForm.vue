@@ -193,11 +193,13 @@ export default {
         },
         showFieldError(message) {
             for (const [key, value] of Object.entries(message)) {
-                const element = document.querySelector(`.${key}-field .error-message`);
-                if (element) {
-                    element.innerHTML = value[0];
-                    element.classList.add('flex');
-                    element.classList.remove('hidden');
+                if (!/^-?\d+$/.test(key)) {
+                    const element = document.querySelector(`.${key}-field .error-message`);
+                    if (element) {
+                        element.innerHTML = value[0];
+                        element.classList.add('flex');
+                        element.classList.remove('hidden');
+                    }
                 }
             }
         },
@@ -270,9 +272,13 @@ export default {
                 this.showSubmissionError();
 
                 graphQLErrors.forEach(({ message }) => {
+                  if (message.includes('Unknown argument')) {
+                    console.error(message);
+                  } else {
                     const messages = JSON.parse(message);
 
                     messages.forEach(message => this.showFieldError(message));
+                  }
                 });
             });
         },
