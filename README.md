@@ -1,5 +1,5 @@
 # Freeform + Vue.js + GraphQL Demo
-This is a demo of a [Vue.js](https://vuejs.org/) + GraphQL, headless project using [Freeform 5](https://docs.solspace.com/craft/freeform/v5) for [Craft CMS 4](https://craftcms.com).
+This is a demo of a [Vue.js](https://vuejs.org/) + GraphQL, headless project using [Freeform 5](https://docs.solspace.com/craft/freeform/v5) for [Craft CMS 5](https://craftcms.com).
 
 ## Freeform Demo
 This demo connects to the [Freeform Demo](https://demo.solspace.net/craft/freeform-demo/) site.
