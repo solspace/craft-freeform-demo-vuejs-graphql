@@ -116,7 +116,6 @@ export default {
         submitButton: null,
         errorMessage: null,
         successMessage: null,
-        reCaptchaValue: null,
         formData: defaultFormData,
         formProperties: defaultFormProperties,
     }),
@@ -129,24 +128,18 @@ export default {
             return await executeRecaptcha('setup');
         };
 
-        const { mutate: saveQuoteSubmission, onDone, onError } = useMutation(SAVE_QUOTE_SUBMISSION);
+        const { mutate: saveQuoteSubmission } = useMutation(SAVE_QUOTE_SUBMISSION);
 
         return {
-            onDone,
-            onError,
             getReCaptcha,
             saveQuoteSubmission,
         };
     },
     created() {
-        const formId = 4;
+        const formId = 1;
 
         getFormProperties(formId).then(formProperties => {
             this.formProperties = formProperties;
-        });
-
-        this.getReCaptcha().then(reCaptchaValue => {
-            this.reCaptchaValue = reCaptchaValue;
         });
     },
     mounted() {
@@ -226,7 +219,7 @@ export default {
         scrollToTop() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         },
-        handleSubmit(event) {
+        async handleSubmit(event) {
             event.preventDefault();
 
             this.hideSpamError();
@@ -234,65 +227,71 @@ export default {
             this.hideSubmissionSuccess();
             this.startProcessing();
 
-            const formData = this.formData;
-            const reCaptchaValue = this.reCaptchaValue;
-            const { csrf, honeypot, reCaptcha } = this.formProperties;
+            try {
+                const formData = this.formData;
+                const { csrf, honeypot, reCaptcha } = this.formProperties;
 
-            this.saveQuoteSubmission({
-                honeypot: {
-                    name: honeypot.name,
-                    value: honeypot.value,
-                },
-                csrfToken: {
-                    name: csrf.name,
-                    value: csrf.token,
-                },
-                reCaptcha: {
+                const reCaptchaValue = await this.getReCaptcha();
+                const reCaptchaInput = {
                     name: reCaptcha.name,
                     value: reCaptchaValue,
-                },
-                firstName: formData.firstName,
-                lastName: formData.lastName,
-                companyName: formData.companyName,
-                email: formData.email,
-                cellPhone: formData.cellPhone,
-                homePhone: formData.homePhone,
-                workPhone: formData.workPhone,
-                subject: formData.subject,
-                appointmentDate: formData.appointmentDate,
-                department: formData.department,
-                howMuchDoYouEnjoyEatingPie: formData.howMuchDoYouEnjoyEatingPie,
-                message: formData.message,
-                howDidYouHearAboutThisJobPosting: formData.howDidYouHearAboutThisJobPosting,
-                acceptTerms: formData.acceptTerms,
-            });
+                };
 
-            this.onDone((result) => {
+                const result = await this.saveQuoteSubmission({
+                    honeypot: {
+                        name: honeypot.name,
+                        value: honeypot.value,
+                    },
+                    csrfToken: {
+                        name: csrf.name,
+                        value: csrf.token,
+                    },
+                    reCaptcha: reCaptchaInput,
+                    firstName: formData.firstName,
+                    lastName: formData.lastName,
+                    companyName: formData.companyName,
+                    email: formData.email,
+                    cellPhone: formData.cellPhone,
+                    homePhone: formData.homePhone,
+                    workPhone: formData.workPhone,
+                    subject: formData.subject,
+                    appointmentDate: formData.appointmentDate,
+                    department: formData.department,
+                    howMuchDoYouEnjoyEatingPie: formData.howMuchDoYouEnjoyEatingPie,
+                    message: formData.message,
+                    howDidYouHearAboutThisJobPosting: formData.howDidYouHearAboutThisJobPosting,
+                    acceptTerms: formData.acceptTerms,
+                });
+
                 this.stopProcessing();
 
-                if (result && Object.hasOwn(result, 'data') && Object.hasOwn(result.data, 'save_quote_Submission') && result.data['save_quote_Submission'] !== null) {
+                if (result && result.data && result.data.save_quote_Submission) {
                     this.showSubmissionSuccess();
                 } else {
                     this.showSubmissionError();
                 }
-            });
 
-            this.onError(({ graphQLErrors }) => {
+            } catch (error) {
                 this.stopProcessing();
                 this.showSubmissionError();
 
-                graphQLErrors.forEach(({ message }) => {
-                  if (message.includes('Please verify that you are not a robot.')) {
-                      this.showSpamError();
-                  } else if (message.includes('Unknown argument')) {
-                      console.error(message);
-                  } else {
-                      const messages = JSON.parse(message);
+                const graphQLErrors = error?.graphQLErrors || [];
 
-                      messages.forEach(message => this.showFieldError(message));
-                  }
+                graphQLErrors.forEach(({ message }) => {
+                    if (message.includes('Please verify that you are not a robot.')) {
+                        this.showSpamError();
+                    } else if (message.includes('Unknown argument')) {
+                        console.error(message);
+                    } else {
+                        try {
+                            const messages = JSON.parse(message);
+                            messages.forEach(message => this.showFieldError(message));
+                        } catch {
+                            console.error(message);
+                        }
+                    }
                 });
-            });
+            }
         },
     },
 };
