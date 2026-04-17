@@ -57,55 +57,59 @@ const client = new ApolloClient({
 });
 
 const SAVE_QUOTE_SUBMISSION = gql`
-  mutation SaveQuoteSubmission(
-    $honeypot: FreeformHoneypotInputType,
-    $captcha: FreeformCaptchaInputType,
-    $csrfToken: FreeformCsrfTokenInputType,
-    $workPhone: String,
-    $subject: String,
-    $message: String,
-    $lastName: String,
-    $howMuchDoYouEnjoyEatingPie: String,
-    $howDidYouHearAboutThisJobPosting: [String],
-    $homePhone: String,
-    $firstName: String,
-    $email: String,
-    $department: String,
-    $companyName: String,
-    $cellPhone: String,
-    $appointmentDate: DateTime,
-    $acceptTerms: String
-  ) {
-    save_quote_Submission(
-      honeypot: $honeypot
-      captcha: $captcha
-      csrfToken: $csrfToken
-      workPhone: $workPhone
-      subject: $subject
-      message: $message
-      lastName: $lastName
-      howMuchDoYouEnjoyEatingPie: $howMuchDoYouEnjoyEatingPie
-      howDidYouHearAboutThisJobPosting: $howDidYouHearAboutThisJobPosting
-      homePhone: $homePhone
-      firstName: $firstName
-      email: $email
-      department: $department
-      companyName: $companyName
-      cellPhone: $cellPhone
-      appointmentDate: $appointmentDate
-      acceptTerms: $acceptTerms
+    mutation SaveQuoteSubmission(
+        $honeypot: FreeformHoneypotInputType,
+        $captcha: FreeformCaptchaInputType,
+        $csrfToken: FreeformCsrfTokenInputType,
+        $workPhone: String,
+        $subject: String,
+        $message: String,
+        $lastName: String,
+        $howMuchDoYouEnjoyEatingPie: String,
+        $howDidYouHearAboutThisJobPosting: [String],
+        $homePhone: String,
+        $firstName: String,
+        $email: String,
+        $department: String,
+        $companyName: String,
+        $cellPhone: String,
+        $appointmentDate: DateTime,
+        $acceptTerms: String
     ) {
-      submissionId
-      success
+        save_quote_Submission(
+            honeypot: $honeypot
+            captcha: $captcha
+            csrfToken: $csrfToken
+            workPhone: $workPhone
+            subject: $subject
+            message: $message
+            lastName: $lastName
+            howMuchDoYouEnjoyEatingPie: $howMuchDoYouEnjoyEatingPie
+            howDidYouHearAboutThisJobPosting: $howDidYouHearAboutThisJobPosting
+            homePhone: $homePhone
+            firstName: $firstName
+            email: $email
+            department: $department
+            companyName: $companyName
+            cellPhone: $cellPhone
+            appointmentDate: $appointmentDate
+            acceptTerms: $acceptTerms
+        ) {
+            submissionId
+            success
+        }
     }
-  }
 `;
 
 provideApolloClient(client);
 
 async function getFormProperties(formId) {
     // See https://docs.solspace.com/craft/freeform/v5/developer/graphql/#how-to-render-a-form
-    const response = await fetch(`/craft/freeform/form/properties/${formId}`, { headers: { 'Accept': 'application/json' }});
+    const response = await fetch(`/craft/freeform/form/properties/${formId}`, {
+        headers: {
+            'Accept': 'application/json',
+        }
+    });
 
     if (!response.ok) {
         throw new Error('Failed to fetch Craft Freeform Form properties');
@@ -222,7 +226,10 @@ export default {
             this.spamMessage.style.display = 'none';
         },
         scrollToTop() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth',
+            });
         },
         async handleSubmit(event) {
             event.preventDefault();
@@ -277,9 +284,9 @@ export default {
                 this.stopProcessing();
 
                 if (result && result.data && result.data.save_quote_Submission) {
-                  this.showSubmissionSuccess();
+                    this.showSubmissionSuccess();
                 } else {
-                  this.showSubmissionError();
+                    this.showSubmissionError();
                 }
             } catch (error) {
                 this.stopProcessing();
