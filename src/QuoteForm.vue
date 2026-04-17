@@ -138,7 +138,7 @@ export default {
         const getReCaptcha = async () => {
             await recaptchaLoaded();
 
-            return await executeRecaptcha('setup');
+            return await executeRecaptcha('submit');
         };
 
         const { mutate: saveQuoteSubmission } = useMutation(SAVE_QUOTE_SUBMISSION);
