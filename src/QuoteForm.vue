@@ -4,6 +4,9 @@ import { useReCaptcha } from 'vue-recaptcha-v3';
 import { provideApolloClient, useMutation } from '@vue/apollo-composable';
 import { ApolloClient, InMemoryCache } from '@apollo/client/core';
 
+// ENTER YOUR FORM ID HERE
+const FORM_ID = undefined;
+
 const defaultFormData = {
     workPhone: '',
     subject: '',
@@ -99,9 +102,9 @@ const SAVE_QUOTE_SUBMISSION = gql`
 
 provideApolloClient(client);
 
-async function getFormProperties(formId) {
+async function getFormProperties() {
     // See https://docs.solspace.com/craft/freeform/v4/developer/graphql/#how-to-render-a-form
-    const response = await fetch(`/craft/freeform/form/properties/${formId}`, {
+    const response = await fetch(`/craft/freeform/form/properties/${FORM_ID}`, {
         headers: {
             'Accept': 'application/json',
         }
@@ -140,10 +143,7 @@ export default {
         };
     },
     created() {
-        // ENTER YOUR FORM ID HERE
-        const formId = undefined;
-
-        getFormProperties(formId).then(formProperties => {
+        getFormProperties().then(formProperties => {
             this.formProperties = formProperties;
         });
     },
